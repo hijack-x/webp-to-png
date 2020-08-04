@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>convert webp to png by canvas</title>
+        <style>
+            .tips {
+                background: #f00;
+                padding: 25px 0;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+        <div class="tips">please drag a webp image to here...</div>
+        <canvas id="canvas"></canvas>
+        <script>
+            function getDropFile(event) {
+                if (event.dataTransfer.items) {
+                    for (var i = 0; i < event.dataTransfer.items.length; i++) {
+                        if (event.dataTransfer.items[i].kind === 'file') {
+                            var file = event.dataTransfer.items[i].getAsFile();
+                            return file;
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < event.dataTransfer.files.length; i++) {
+                        var file = event.dataTransfer.files[i];
+                        return file;
+                    }
+                }
+                return false;
+            }
+            function dropHandler(event) {
+                // Prevent default behavior (Prevent file from being opened)
+                event.preventDefault();
+                var file = getDropFile(event);
+                if (!/\.webp/i.test(file.name)) {
+                    alert('not webp file');
+                    return;
+                }
+                var img = document.createElement('img');
+                img.src = file.name;
+                img.onload = function () {
+                    drawImage(img);
+                };
+            }
+            function dragOverHandler(event) {
+                // Prevent default behavior (Prevent file from being opened)
+                event.preventDefault();
+            }
+            function drawImage(img) {
+                var canvas = document.getElementById('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+            }
+        </script>
+    </body>
+</html>
