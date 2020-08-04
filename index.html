@@ -36,10 +36,6 @@
                 // Prevent default behavior (Prevent file from being opened)
                 event.preventDefault();
                 var file = getDropFile(event);
-                if (!/\.webp/i.test(file.name)) {
-                    alert('not webp file');
-                    return;
-                }
                 var img = document.createElement('img');
                 img.src = file.name;
                 img.onload = function () {
@@ -56,6 +52,9 @@
                 canvas.height = img.height;
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
+                setTimeout(function () {
+                    alert('convert finished, please use "Save as..." save');
+                }, 500);
             }
         </script>
     </body>
