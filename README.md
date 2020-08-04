@@ -1,2 +1,2 @@
 # webp-to-png
-a simple h5 tool used to convert webp to png
+use h5 canvas fast convert webp to png online
