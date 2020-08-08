@@ -37,9 +37,12 @@
                 event.preventDefault();
                 var file = getDropFile(event);
                 var img = document.createElement('img');
-                img.src = file.name;
+                img.src = window.URL.createObjectURL(file);
                 img.onload = function () {
                     drawImage(img);
+                };
+                img.onerror = function(err) {
+                    alert('load webp image error');
                 };
             }
             function dragOverHandler(event) {
