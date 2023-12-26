@@ -5,6 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>convert webp to png by canvas</title>
         <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            .page {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+            }
+            canvas {
+                position: relative;
+                z-index: 2;
+            }
             .tips {
                 background: #f00;
                 padding: 25px 0;
@@ -13,8 +29,10 @@
         </style>
     </head>
     <body ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-        <div class="tips">please drag a webp image to here...</div>
-        <canvas id="canvas"></canvas>
+        <div class="page">
+            <div class="tips">please drag a webp image to here...</div>
+            <canvas id="canvas"></canvas>
+        </div>
         <script>
             function getDropFile(event) {
                 if (event.dataTransfer.items) {
