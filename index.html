@@ -8,6 +8,7 @@
             * {
                 padding: 0;
                 margin: 0;
+                user-select: none;
             }
             .page {
                 position: absolute;
@@ -29,47 +30,21 @@
                 color: #fff;
                 font-weight: bold;
             }
+            .tips b {
+                color: blue;
+            }
+            #fileInput {
+                display: none;
+            }
         </style>
     </head>
     <body ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
         <div class="page">
-            <div class="tips">please drag a webp image to here...</div>
+            <div class="tips">Double click upload or dragdrop <b>webp/avif/svg/...</b> image file to convert!</div>
+            <input type="file" id="fileInput" accept="image/*" />
             <canvas id="canvas"></canvas>
         </div>
         <script>
-            function getDropFile(event) {
-                if (event.dataTransfer.items) {
-                    for (var i = 0; i < event.dataTransfer.items.length; i++) {
-                        if (event.dataTransfer.items[i].kind === 'file') {
-                            var file = event.dataTransfer.items[i].getAsFile();
-                            return file;
-                        }
-                    }
-                } else {
-                    for (var i = 0; i < event.dataTransfer.files.length; i++) {
-                        var file = event.dataTransfer.files[i];
-                        return file;
-                    }
-                }
-                return false;
-            }
-            function dropHandler(event) {
-                // Prevent default behavior (Prevent file from being opened)
-                event.preventDefault();
-                var file = getDropFile(event);
-                var img = document.createElement('img');
-                img.src = window.URL.createObjectURL(file);
-                img.onload = function () {
-                    drawImage(img);
-                };
-                img.onerror = function (err) {
-                    alert('load webp image error');
-                };
-            }
-            function dragOverHandler(event) {
-                // Prevent default behavior (Prevent file from being opened)
-                event.preventDefault();
-            }
             function drawImage(img) {
                 var canvas = document.getElementById('canvas');
                 canvas.width = img.width;
@@ -77,9 +52,40 @@
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
                 setTimeout(function () {
-                    alert('convert finished, please use "Save as..." save');
+                    alert('Convert finished, please right click image, use "Save as..." save!');
                 }, 100);
             }
+            function processFile(file) {
+                var img = document.createElement('img');
+                img.src = window.URL.createObjectURL(file);
+                img.onload = function () {
+                    drawImage(img);
+                };
+                img.onerror = function () {
+                    alert('Load image fail!');
+                };
+            }
+            function dropHandler(event) {
+                // Prevent default behavior (Prevent file from being opened)
+                event.preventDefault();
+                if (event.dataTransfer.files.length > 0) {
+                    var file = event.dataTransfer.files[0];
+                    processFile(file);
+                } else {
+                    alert('Drag data item kind is not file, please check!');
+                }
+            }
+            function dragOverHandler(event) {
+                // Prevent default behavior (Prevent file from being opened)
+                event.preventDefault();
+            }
+            var fileInput = document.getElementById('fileInput');
+            fileInput.addEventListener('change', function () {
+                processFile(this.files[0]);
+            });
+            window.addEventListener('dblclick', function () {
+                fileInput.click();
+            });
         </script>
     </body>
 </html>
